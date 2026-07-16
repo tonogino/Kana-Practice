@@ -1,59 +1,55 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kana Studio · 假名练习</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <main class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="#" aria-label="Kana Studio 首页"><span>か</span> Kana Studio</a>
-        <label class="language-picker">
-          <span class="sr-only">界面语言</span>
-          <select id="languageSelect">
-            <option value="zh">中文</option>
-            <option value="ja">日本語</option>
-            <option value="ko">한국어</option>
-            <option value="en">English</option>
-          </select>
-        </label>
-        <div class="progress"><span id="progressText">第 1 / 5 题</span><i><b id="progressBar"></b></i></div>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kana Studio · 假名练习</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./refine.css" />
+</head>
+<body>
+  <div class="sparkles" aria-hidden="true"><i>✦</i><i>♡</i><i>✧</i><i>☁</i></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#"><span>か</span> Kana Studio</a>
+      <label class="language-picker"><span class="sr-only">界面语言</span><select id="languageSelect"><option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="en">English</option></select></label>
+      <div class="progress"><span id="progressText">准备好了吗？</span><i><b id="progressBar"></b></i></div>
+    </header>
 
-      <section class="workspace">
-        <aside class="settings-panel" aria-label="练习设置">
-          <div class="eyebrow" data-i18n="practiceSet">练习词库</div>
-          <h1 data-i18n="chooseSet">选择你的练习</h1>
-          <p class="muted" data-i18n="setHint">按需组合假名，开始一组轻松的书写练习。</p>
+    <section class="workspace">
+      <aside class="settings-panel">
+        <div class="mini-mascot" aria-hidden="true">૮ ˶ᵔ ᵕ ᵔ˶ ა</div>
+        <div class="eyebrow" data-i18n="practiceSet">练习词库</div>
+        <h1 data-i18n="chooseSet">选择你的练习</h1>
+        <p class="muted" data-i18n="setHint">按需组合假名，开始一组轻松的书写练习。</p>
+        <label class="field-label" for="vocabSelect" data-i18n="vocabulary">词库</label>
+        <select class="vocab-select" id="vocabSelect"></select>
+        <div class="group-heading"><span data-i18n="customSelection">手动选择</span><button id="selectAll" type="button" data-i18n="selectAll">全选</button></div>
+        <div id="kanaGroups" class="kana-groups"></div>
+        <button id="startPractice" class="start-button" type="button"><span>✦</span> <span data-i18n="startPractice">开始练习</span></button>
+      </aside>
 
-          <label class="field-label" for="vocabSelect" data-i18n="vocabulary">词库</label>
-          <select class="vocab-select" id="vocabSelect"></select>
-
-          <div class="group-heading"><span data-i18n="customSelection">手动选择</span><button id="selectAll" type="button" data-i18n="selectAll">全选</button></div>
-          <div id="kanaGroups" class="kana-groups"></div>
-          <button id="startPractice" class="start-button" type="button" data-i18n="startPractice">开始练习</button>
-        </aside>
-
-        <section class="practice-panel" aria-label="假名书写练习">
-          <div class="question-row">
-            <div><div class="eyebrow" data-i18n="writeThis">照着写</div><p id="questionMeaning">a · 阿</p></div>
-            <button class="skip-button" id="skipButton" type="button" data-i18n="skip">换一个</button>
+      <section class="practice-panel" aria-label="假名书写练习">
+        <div id="readyState" class="ready-state">
+          <div class="character-cloud">あ</div><div class="floating-star star-one">✦</div><div class="floating-star star-two">♡</div>
+          <div class="eyebrow" data-i18n="readyEyebrow">准备好了吗？</div>
+          <h2 data-i18n="readyTitle">开启你的假名小冒险</h2>
+          <p data-i18n="readyHint">选择左侧词库后，点击开始练习生成专属随机题单。</p>
+          <button id="readyStart" class="start-button" type="button"><span>▶</span> <span data-i18n="startPractice">开始练习</span></button>
+        </div>
+        <div id="exerciseState" class="exercise-state" hidden>
+          <div class="question-row"><div><div class="eyebrow" data-i18n="listenAndWrite">看罗马音，写出假名</div><p id="questionMeaning">罗马音：a</p></div><button class="skip-button" id="skipButton" type="button" data-i18n="skip">换一个</button></div>
+          <div class="roman-card" aria-live="polite"><span id="currentRoman">a</span><button id="soundButton" type="button" aria-label="播放读音">◖</button></div>
+          <div class="answer-line"><button id="answerButton" type="button" class="answer-button" data-i18n="showAnswer">显示答案</button><span id="answerReveal" hidden></span></div>
+          <div class="drawing-section" id="drawingSection">
+            <div class="canvas-heading"><span data-i18n="writingArea">书写区</span><span class="shortcut" data-i18n="shortcut">按住鼠标或手指书写</span></div>
+            <div class="canvas-wrap"><canvas id="writingCanvas" aria-label="书写练习区域"></canvas></div>
+            <div class="tools" role="toolbar"><button class="tool active" id="pencilButton" type="button" aria-pressed="true"><span class="tool-icon">✎</span><span data-i18n="pencil">铅笔</span></button><button class="tool" id="eraserButton" type="button" aria-pressed="false"><span class="tool-icon eraser-icon">▱</span><span data-i18n="eraser">橡皮</span></button><button class="tool" id="undoButton" type="button" disabled><span class="tool-icon">↶</span><span data-i18n="undo">撤回</span></button><button class="clear-button" id="clearButton" type="button" data-i18n="clear">清除笔迹</button><button class="next-button" id="nextButton" type="button" data-i18n="next">下一题 →</button></div>
           </div>
-          <div class="character-card" aria-live="polite"><span id="currentKana">あ</span><button id="soundButton" type="button" aria-label="播放读音">◖</button></div>
-
-          <div class="canvas-heading"><span data-i18n="writingArea">书写区</span><span class="shortcut" data-i18n="shortcut">按住鼠标或手指书写</span></div>
-          <div class="canvas-wrap"><canvas id="writingCanvas" aria-label="书写练习区域"></canvas><div id="canvasGuide">あ</div></div>
-          <div class="tools" role="toolbar" aria-label="书写工具">
-            <button class="tool active" id="pencilButton" type="button" aria-pressed="true"><span class="tool-icon pencil-icon">✎</span><span data-i18n="pencil">铅笔</span></button>
-            <button class="tool" id="eraserButton" type="button" aria-pressed="false"><span class="tool-icon eraser-icon">▱</span><span data-i18n="eraser">橡皮</span></button>
-            <button class="clear-button" id="clearButton" type="button" data-i18n="clear">清除笔迹</button>
-            <button class="next-button" id="nextButton" type="button" data-i18n="next">下一题 →</button>
-          </div>
-        </section>
+        </div>
       </section>
-    </main>
-    <script src="./app.js"></script>
-  </body>
+    </section>
+  </main>
+  <script src="./app.js"></script>
+</body>
 </html>
